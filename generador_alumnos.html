@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador de Script SQL</title>
+</head>
+
+<script>
+    const apellidosFranceses = [
+    "Martin", "Bernard", "Thomas", "Petit", "Robert", "Richard", "Durand", "Dubois", "Moreau", "Simon",
+    "Laurent", "Lefevre", "Leroy", "Roux", "Lefevre", "Fournier", "Meyer", "Lemoine", "Andre", "Mercier",
+    "Dupont", "Lambert", "Bonnet", "Francois", "Martinez", "Le Gall", "Leroux", "Lefort", "Girard", "Chevalier",
+    "Legrand", "Garnier", "Faure", "Rousseau", "Blanc", "Guerin", "Muller", "Henry", "Roussel", "Nicolas",
+    "Perrin", "Morin", "Mathieu", "Clement", "Gauthier", "Dumont", "Leroux", "Barbier", "Dufour", "Colin",
+    "Caron", "Picard", "Renard", "Pierre", "Simon", "Leclerc", "Fabre", "Aubert", "Olivier", "Marchand",
+    "Rodriguez", "Perez", "Bertrand", "Millet", "Arnaud", "Daniel", "Gonzalez", "Berger", "Lefevre", "Poulain",
+    "Rey", "Bourgeois", "Rouxel", "Benoit", "Breton", "Reynaud", "Adam", "Guillot", "Fleury", "Menard",
+    "Dumas", "Carpentier", "Huet", "Millot", "Roche", "Hamon", "Gallet", "Philippe", "Bouchet", "Boulanger",
+    "Besson", "Sauvage", "Dupuis", "Vincent", "Bazin", "Leger", "Collet", "Perrot", "Loiseau", "Remy"
+];
+
+    const apellidosJaponeses = [
+        "Sato", "Suzuki", "Takahashi", "Tanaka", "Watanabe", "Ito", "Yamamoto", "Nakamura", "Kobayashi", "Kato",
+        "Yoshida", "Yamada", "Sasaki", "Yamaguchi", "Matsumoto", "Inoue", "Kimura", "Shimizu", "Hayashi", "Okada",
+        "Mori", "Abe", "Ikeda", "Hashimoto", "Yamashita", "Ishikawa", "Ogawa", "Goto", "Hasegawa", "Murakami",
+        "Nakajima", "Maeda", "Fujita", "Nishimura", "Oshima", "Imai", "Fukuda", "Ogata", "Nakano", "Sakamoto",
+        "Kaneko", "Miyamoto", "Ueda", "Tamura", "Sugiyama", "Takagi", "Hirano", "Sakai", "Satoh", "Saito",
+        "Kudo", "Hirata", "Matsui", "Maruyama", "Ishii", "Shibata", "Miyazaki", "Matsuda", "Sugawara", "Ono",
+        "Aoki", "Kawamura", "Kinoshita", "Yamamura", "Matsuo", "Nakagawa", "Narita", "Kojima", "Fujimoto", "Iwasaki",
+        "Sakurai", "Taniguchi", "Fujii", "Wada", "Takahara", "Tamura", "Ota", "Kanazawa", "Hosokawa", "Ishikawa",
+        "Takayama", "Nakayama", "Yano", "Takahata", "Endo", "Ohashi", "Ueno", "Kondo", "Shimada", "Asano"
+    ];
+    const nombresMexicanos = [
+        "Juan Carlos", "Manuel Luis", "José Antonio", "Jesús Francisco", "Miguel Ángel",
+        "Pedro Alejandro", "Javier Daniel", "Ricardo Fernando", "Diego Guadalupe", "Rafael Pablo",
+        "Santiago Gabriel", "Emilio Martín", "Roberto Arturo", "José Luis Alberto", "Ernesto Víctor",
+        "Mauricio Adrián", "Héctor Raúl", "Gerardo Hugo", "Rodrigo Ramón", "Leonardo Salvador",
+        "Oscar Andrés", "Fabián Armando", "Eduardo Manuel", "Enrique Mario", "Álvaro Jorge",
+        "Mariano Lorenzo", "Octavio Isaac", "Agustín Benjamín", "Felipe Rubén", "Alejandro Óscar",
+        "Jaime Federico", "David Fidel", "Gerardo Gustavo", "Mariano Marcos", "Miguel Ángel Nicolás",
+        "Noé Pascual", "Patricio Rafael", "Raúl Salvador", "Sergio Silvestre", "Tomás Urbano",
+        "Valentín Vicente", "Víctor Xavier", "Yahir Zacarías", "Adriana Ana", "Berenice Carmen",
+        "Dulce Esperanza", "Frida Gloria", "Isabel Juana", "Karen Laura", "Lorena María",
+        "Verónica Rosario", "Montserrat Guadalupe", "Ana Sofía", "Cecilia Aurora", "Silvia Eugenia",
+        "María Guadalupe", "Adela Margarita", "Laura Gabriela", "Patricia Beatriz", "Rebeca Alejandra",
+        "Miriam Gabriela", "Sandra Elizabeth", "Rosa Angélica", "Cynthia Adriana", "Carolina Leticia",
+        "Ana Lilia", "Yolanda Claudia", "Leticia María", "Adriana Elizabeth", "Diana Guillermina",
+        "Gabriela Graciela", "Irma Teresa", "Vanessa Marisol", "Claudia Susana", "Paola Lorena",
+        "Elena María", "Alejandra Lucía", "Daniela Valeria", "Alicia María", "Juana Patricia",
+        "Martha Alicia", "Lilia Guadalupe", "Lucía Patricia", "Norma Alejandra", "Rocío Gabriela",
+        "Laura Elena", "Claudia Patricia", "Irma Patricia", "Verónica Elizabeth", "Beatriz Guadalupe",
+        "Susana Margarita", "Patricia Alejandra", "Luz Elena", "Lourdes Elena", "Maricela Elizabeth"
+    ];
+
+
+    function guardar() {
+        var contenidoSQL = document.getElementById("resultado").innerHTML; // Obtener el contenido SQL generado
+        contenidoSQL = contenidoSQL.replace(/<br\s*\/?>/gi, '\n'); // Reemplazar <br> con \n
+        var nombreArchivo = "script_sql"; // Nombre del archivo sin la extensión .sql
+        var blob = new Blob([contenidoSQL], { type: 'text/sql' });
+        var a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = nombreArchivo + '.sql'; 
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    }
+    
+
+    function generar() {
+    var valoresSQL = [];
+    for (let index = 0; index < 20000; index++) {
+        var formattedIndex = String(index).padStart(5, '0');
+        var matricula = `'211${formattedIndex}'`;
+        var apellido1 = `'${apellidosFranceses[Math.floor(Math.random() * apellidosFranceses.length)]}'`;
+        var apellido2 = `'${apellidosJaponeses[Math.floor(Math.random() * apellidosJaponeses.length)]}'`;
+        var nombre1 = `'${nombresMexicanos[Math.floor(Math.random() * nombresMexicanos.length)]}'`;
+        var correo = `'A${formattedIndex}@uthermosillo.com.mx'`;
+        
+        // Concatenar los valores en un solo string
+        var valores = `(${matricula}, ${apellido1}, ${apellido2}, ${nombre1}, ${correo})`;
+        valoresSQL.push(valores);
+    }
+
+    // Generar la salida SQL en formato HTML
+    var salida = `
+        CREATE DATABASE IF NOT EXIST sistema_escolar; 
+        USE sistema_escolar;
+        CREATE TABLE IF NOT EXIST alumnos(matricula int UNIQUE, apellido1 VARCHAR(255) NOT NULL, apellido2 VARCHAR(255), nombres VARCHAR(255) NOT NULL, correo VARCHAR(255) NOT NULL UNIQUE);
+        INSERT INTO alumnos(matricula, apellido1, apellido2, nombres, correo) VALUES<br>
+        ${valoresSQL.join(",<br>")};
+    `;
+
+    document.getElementById("resultado").innerHTML = salida;
+}
+
+
+</script>
+
+<body>
+    <input type="button" value="Generar" onclick="generar()">   
+    <input type="button" value="Guardar SQL" onclick="guardar()">   
+    <p id="resultado"></p>
+
+
+   
+</body>
+</html>
